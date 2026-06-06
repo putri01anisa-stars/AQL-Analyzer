@@ -19,10 +19,14 @@ st.set_page_config(
 # ─────────────────────────────────────────────
 # CSS STYLING
 # ─────────────────────────────────────────────
+# ─────────────────────────────────────────────
+# CSS STYLING
+# ─────────────────────────────────────────────
+st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Source+Code+Pro:wght@400;600&family=Inter:wght@300;400;500&display=swap');
 
-/* TEMA GELAP (Bawaan aslimu) */
+/* TEMA GELAP */
 @media (prefers-color-scheme: dark) {
     :root {
         --primary: #00d4aa;
@@ -38,29 +42,30 @@ st.set_page_config(
     }
 }
 
-/* TEMA TERANG (Penyesuaian baru) */
+/* TEMA TERANG */
 @media (prefers-color-scheme: light) {
     :root {
-        --primary: #00997a; /* Sedikit digelapkan agar mudah dibaca di latar putih */
+        --primary: #00997a;
         --secondary: #ffffff;
         --accent: #e65c2b;
         --bg: #ffffff;
-        --card: #f8fafc; /* Abu-abu sangat terang */
+        --card: #f8fafc;
         --border: #cbd5e1;
-        --text: #0f172a; /* Biru dongker gelap/Hampir hitam */
+        --text: #0f172a;
         --muted: #64748b;
         --sidebar-bg: #f1f5f9;
         --header-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
     }
 }
 
-/* Terapkan variabel CSS */
+/* Terapkan variabel CSS secara global */
 .stApp {
     background: var(--bg) !important;
     color: var(--text) !important;
     font-family: 'Inter', sans-serif;
 }
 
+/* Header */
 .app-header {
     background: var(--header-gradient);
     border: 1px solid var(--border);
@@ -69,6 +74,21 @@ st.set_page_config(
     margin-bottom: 24px;
     position: relative;
     overflow: hidden;
+}
+.app-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 2px;
+    margin: 0;
+}
+.app-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 1px;
 }
 
 /* Sidebar Override */
@@ -80,110 +100,81 @@ div[data-testid="stSidebar"] * { color: var(--text) !important; }
 
 /* Metric cards */
 .metric-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 22px;
-    text-align: center;
-    transition: border-color 0.2s;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    text-align: center;
+    transition: border-color 0.2s;
 }
 .metric-card:hover { border-color: var(--primary); }
 .metric-value {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--primary);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary);
 }
 .metric-label {
-    font-size: 0.78rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 2px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
 }
 
-/* Result badge */
+/* Result badges */
 .result-pass {
-    background: rgba(0,212,170,0.12);
-    border: 2px solid var(--primary);
-    border-radius: 12px;
-    padding: 20px 28px;
-    text-align: center;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary);
-    letter-spacing: 2px;
+    background: rgba(0,212,170,0.12);
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    padding: 20px 28px;
+    text-align: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 2px;
 }
 .result-fail {
-    background: rgba(255,107,53,0.12);
-    border: 2px solid var(--accent);
-    border-radius: 12px;
-    padding: 20px 28px;
-    text-align: center;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 2px;
+    background: rgba(255,107,53,0.12);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 20px 28px;
+    text-align: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
 }
 
 /* Section headers */
 .section-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--primary);
-    letter-spacing: 1.5px;
-    border-left: 3px solid var(--primary);
-    padding-left: 12px;
-    margin: 20px 0 12px 0;
-    text-transform: uppercase;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 1.5px;
+    border-left: 3px solid var(--primary);
+    padding-left: 12px;
+    margin: 20px 0 12px 0;
+    text-transform: uppercase;
 }
 
-/* Streamlit overrides */
-div[data-testid="stSidebar"] {
-    background: #080f1e !important;
-    border-right: 1px solid var(--border) !important;
-}
-div[data-testid="stSidebar"] * { color: var(--text) !important; }
-
-.stSelectbox > div > div {
-    background: var(--card) !important;
-    border: 1px solid var(--border) !important;
-    color: var(--text) !important;
-    border-radius: 8px !important;
-}
+/* Styling tambahan untuk input Streamlit agar menyesuaikan tema */
+.stSelectbox > div > div, 
 .stNumberInput > div > div > input,
 .stTextInput > div > div > input {
-    background: var(--card) !important;
-    border: 1px solid var(--border) !important;
-    color: var(--text) !important;
-    border-radius: 8px !important;
-}
-.stButton > button {
-    background: linear-gradient(135deg, #00d4aa, #00a882) !important;
-    color: #060d1a !important;
-    font-family: 'Rajdhani', sans-serif !important;
-    font-weight: 700 !important;
-    font-size: 1rem !important;
-    letter-spacing: 1.5px !important;
-    border: none !important;
-    border-radius: 8px !important;
-    padding: 10px 28px !important;
-    text-transform: uppercase !important;
-    transition: all 0.2s !important;
-}
-.stButton > button:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(0,212,170,0.35) !important;
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    border-radius: 8px !important;
 }
 .stDataFrame {
-    border: 1px solid var(--border) !important;
-    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
 }
-h1, h2, h3, h4, h5, h6 { color: var(--text) !important; }
-p, span, div { color: var(--text); }
+h1, h2, h3, h4, h5, h6, p, span, div { color: var(--text); }
 .stMarkdown p { color: var(--muted) !important; }
 </style>
 """, unsafe_allow_html=True)
