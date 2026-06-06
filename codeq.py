@@ -19,9 +19,6 @@ st.set_page_config(
 # ─────────────────────────────────────────────
 # CSS STYLING
 # ─────────────────────────────────────────────
-# ─────────────────────────────────────────────
-# CSS STYLING
-# ─────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Source+Code+Pro:wght@400;600&family=Inter:wght@300;400;500&display=swap');
@@ -232,25 +229,25 @@ AQL_TABLE = {
 AQL_LEVELS = [0.065, 0.1, 0.15, 0.25, 0.40, 0.65, 1.0, 1.5, 2.5, 4.0, 6.5, 10]
 
 def get_code_letter(lot_size):
-    for low, high, code in LOT_SIZE_TABLE:
-        if low <= lot_size <= high:
-            return code
-    return 'Q'
+    for low, high, code in LOT_SIZE_TABLE:
+        if low <= lot_size <= high:
+            return code
+    return 'Q'
 
 def get_aql_criteria(code_letter, aql):
-    table = AQL_TABLE.get(code_letter, {})
-    return table.get(aql, None)
+    table = AQL_TABLE.get(code_letter, {})
+    return table.get(aql, None)
 
 def get_defect_rate(n_defects, sample_size):
-    return (n_defects / sample_size) * 100 if sample_size > 0 else 0
+    return (n_defects / sample_size) * 100 if sample_size > 0 else 0
 
 # ─────────────────────────────────────────────
 # HEADER
 # ─────────────────────────────────────────────
 st.markdown("""
 <div class="app-header">
-    <div class="app-title">🔬 AQL SAMPLING ANALYZER</div>
-    <div class="app-subtitle">Pengolahan Data Sampling & Acceptance Quality Limit · ISO 2859-1 · Kelompok 7</div>
+    <div class="app-title">🔬 AQL SAMPLING ANALYZER</div>
+    <div class="app-subtitle">Pengolahan Data Sampling & Acceptance Quality Limit · ISO 2859-1 · Kelompok 7</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -258,24 +255,24 @@ st.markdown("""
 # SIDEBAR
 # ─────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### ⚙️ Parameter Sampling")
-    st.markdown("---")
+    st.markdown("### ⚙️ Parameter Sampling")
+    st.markdown("---")
 
-    lot_size = st.number_input("Ukuran Lot (Batch)", min_value=2, max_value=999999, value=1000, step=50)
-    aql_level = st.selectbox("AQL Level (%)", options=AQL_LEVELS, index=6, format_func=lambda x: f"{x}%")
-    inspection_type = st.selectbox("Tipe Inspeksi", ["Normal", "Ketat (Tightened)", "Longgar (Reduced)"])
+    lot_size = st.number_input("Ukuran Lot (Batch)", min_value=2, max_value=999999, value=1000, step=50)
+    aql_level = st.selectbox("AQL Level (%)", options=AQL_LEVELS, index=6, format_func=lambda x: f"{x}%")
+    inspection_type = st.selectbox("Tipe Inspeksi", ["Normal", "Ketat (Tightened)", "Longgar (Reduced)"])
 
-    st.markdown("---")
-    st.markdown("### 📥 Data Defek")
-    n_defects = st.number_input("Jumlah Defek Ditemukan", min_value=0, max_value=9999, value=3)
+    st.markdown("---")
+    st.markdown("### 📥 Data Defek")
+    n_defects = st.number_input("Jumlah Defek Ditemukan", min_value=0, max_value=9999, value=3)
 
-    st.markdown("---")
-    st.markdown("### 📋 Info Lot")
-    product_name = st.text_input("Nama Produk/Lot", value="Sampel Kimia A")
-    lot_number = st.text_input("Nomor Lot", value="LOT-2026-001")
-    inspector = st.text_input("Nama Inspektor", value="Kelompok 7")
+    st.markdown("---")
+    st.markdown("### 📋 Info Lot")
+    product_name = st.text_input("Nama Produk/Lot", value="Sampel Kimia A")
+    lot_number = st.text_input("Nomor Lot", value="LOT-2026-001")
+    inspector = st.text_input("Nama Inspektor", value="Kelompok 7")
 
-    analyze_btn = st.button("🔍 ANALISIS SEKARANG", use_container_width=True)
+    analyze_btn = st.button("🔍 ANALISIS SEKARANG", use_container_width=True)
 
 # ─────────────────────────────────────────────
 # CALCULATION
@@ -285,9 +282,9 @@ sample_size = SAMPLE_SIZE.get(code_letter, 2)
 criteria = get_aql_criteria(code_letter, aql_level)
 
 if criteria:
-    ac, re = criteria
+    ac, re = criteria
 else:
-    ac, re = 0, 1
+    ac, re = 0, 1
 
 defect_rate = get_defect_rate(n_defects, sample_size)
 decision = "ACCEPT ✅" if n_defects <= ac else "REJECT ❌"
@@ -300,206 +297,206 @@ tab1, tab2, tab3, tab4 = st.tabs(["📊 Hasil Analisis", "📈 Visualisasi", "�
 
 # ── TAB 1: HASIL ──────────────────────────────
 with tab1:
-    st.markdown('<div class="section-title">Parameter Lot</div>', unsafe_allow_html=True)
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        st.markdown(f'<div class="metric-card"><div class="metric-value">{lot_size:,}</div><div class="metric-label">Ukuran Lot</div></div>', unsafe_allow_html=True)
-    with c2:
-        st.markdown(f'<div class="metric-card"><div class="metric-value">{code_letter}</div><div class="metric-label">Kode Sampel</div></div>', unsafe_allow_html=True)
-    with c3:
-        st.markdown(f'<div class="metric-card"><div class="metric-value">{sample_size}</div><div class="metric-label">Ukuran Sampel</div></div>', unsafe_allow_html=True)
-    with c4:
-        st.markdown(f'<div class="metric-card"><div class="metric-value">{aql_level}%</div><div class="metric-label">AQL Level</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Parameter Lot</div>', unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{lot_size:,}</div><div class="metric-label">Ukuran Lot</div></div>', unsafe_allow_html=True)
+    with c2:
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{code_letter}</div><div class="metric-label">Kode Sampel</div></div>', unsafe_allow_html=True)
+    with c3:
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{sample_size}</div><div class="metric-label">Ukuran Sampel</div></div>', unsafe_allow_html=True)
+    with c4:
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{aql_level}%</div><div class="metric-label">AQL Level</div></div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="section-title">Kriteria Penerimaan</div>', unsafe_allow_html=True)
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        st.markdown(f'<div class="metric-card"><div class="metric-value">{ac}</div><div class="metric-label">Accept Number (Ac)</div></div>', unsafe_allow_html=True)
-    with c2:
-        st.markdown(f'<div class="metric-card"><div class="metric-value">{re}</div><div class="metric-label">Reject Number (Re)</div></div>', unsafe_allow_html=True)
-    with c3:
-        st.markdown(f'<div class="metric-card"><div class="metric-value">{n_defects}</div><div class="metric-label">Defek Ditemukan</div></div>', unsafe_allow_html=True)
-    with c4:
-        st.markdown(f'<div class="metric-card"><div class="metric-value">{defect_rate:.2f}%</div><div class="metric-label">Defect Rate</div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Kriteria Penerimaan</div>', unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{ac}</div><div class="metric-label">Accept Number (Ac)</div></div>', unsafe_allow_html=True)
+    with c2:
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{re}</div><div class="metric-label">Reject Number (Re)</div></div>', unsafe_allow_html=True)
+    with c3:
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{n_defects}</div><div class="metric-label">Defek Ditemukan</div></div>', unsafe_allow_html=True)
+    with c4:
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{defect_rate:.2f}%</div><div class="metric-label">Defect Rate</div></div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="section-title">Keputusan Sampling</div>', unsafe_allow_html=True)
-    if decision_pass:
-        st.markdown(f'<div class="result-pass">✅ LOT DITERIMA (ACCEPT)<br><span style="font-size:1rem;font-weight:400;color:#7899bb">Defek ({n_defects}) ≤ Ac ({ac}) — Lot memenuhi standar AQL {aql_level}%</span></div>', unsafe_allow_html=True)
-    else:
-        st.markdown(f'<div class="result-fail">❌ LOT DITOLAK (REJECT)<br><span style="font-size:1rem;font-weight:400;color:#7899bb">Defek ({n_defects}) ≥ Re ({re}) — Lot tidak memenuhi standar AQL {aql_level}%</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Keputusan Sampling</div>', unsafe_allow_html=True)
+    if decision_pass:
+        st.markdown(f'<div class="result-pass">✅ LOT DITERIMA (ACCEPT)<br><span style="font-size:1rem;font-weight:400;color:#7899bb">Defek ({n_defects}) ≤ Ac ({ac}) — Lot memenuhi standar AQL {aql_level}%</span></div>', unsafe_allow_html=True)
+    else:
+        st.markdown(f'<div class="result-fail">❌ LOT DITOLAK (REJECT)<br><span style="font-size:1rem;font-weight:400;color:#7899bb">Defek ({n_defects}) ≥ Re ({re}) — Lot tidak memenuhi standar AQL {aql_level}%</span></div>', unsafe_allow_html=True)
 
-    st.markdown("")
+    st.markdown("")
 
-    # Interpretation
-    st.markdown('<div class="section-title">Interpretasi</div>', unsafe_allow_html=True)
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.info(f"""
+    # Interpretation
+    st.markdown('<div class="section-title">Interpretasi</div>', unsafe_allow_html=True)
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.info(f"""
 **📌 Tentang Lot Ini**
 - **Produk:** {product_name}
 - **Nomor Lot:** {lot_number}
 - **Inspektor:** {inspector}
 - **Tipe Inspeksi:** {inspection_type}
-        """)
-    with col_b:
-        sampling_ratio = (sample_size / lot_size) * 100
-        if decision_pass:
-            rekomendasi = "✅ Lot dapat dikirim/digunakan. Lanjutkan proses produksi normal."
-        else:
-            rekomendasi = "❌ Lakukan inspeksi 100% atau kembalikan ke supplier. Tinjau proses produksi."
-        st.warning(f"""
+        """)
+    with col_b:
+        sampling_ratio = (sample_size / lot_size) * 100
+        if decision_pass:
+            rekomendasi = "✅ Lot dapat dikirim/digunakan. Lanjutkan proses produksi normal."
+        else:
+            rekomendasi = "❌ Lakukan inspeksi 100% atau kembalikan ke supplier. Tinjau proses produksi."
+        st.warning(f"""
 **💡 Rekomendasi Tindakan**
 
 {rekomendasi}
 
 - Rasio sampling: **{sampling_ratio:.1f}%** dari lot
 - Confidence level: **~95%** (General Inspection Level II)
-        """)
+        """)
 
 # ── TAB 2: VISUALISASI ────────────────────────
 with tab2:
-    st.markdown('<div class="section-title">Visualisasi Data Sampling</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Visualisasi Data Sampling</div>', unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-    # Gauge chart - defect vs limit
-    with col1:
-        fig_gauge = go.Figure(go.Indicator(
-            mode="gauge+number+delta",
-            value=n_defects,
-            delta={'reference': ac, 'increasing': {'color': "#ff6b35"}, 'decreasing': {'color': "#00d4aa"}},
-            title={'text': "Jumlah Defek vs Accept Number", 'font': {'color': '#e0f0ff', 'family': 'Rajdhani', 'size': 15}},
-            gauge={
-                'axis': {'range': [0, max(re * 2, n_defects * 1.5, 5)], 'tickcolor': '#7899bb'},
-                'bar': {'color': '#00d4aa' if decision_pass else '#ff6b35'},
-                'bgcolor': '#0d1f35',
-                'borderwidth': 1,
-                'bordercolor': '#1a3a5c',
-                'steps': [
-                    {'range': [0, ac], 'color': 'rgba(0,212,170,0.15)'},
-                    {'range': [ac, re], 'color': 'rgba(255,165,0,0.15)'},
-                    {'range': [re, max(re * 2, n_defects * 1.5, 5)], 'color': 'rgba(255,107,53,0.15)'},
-                ],
-                'threshold': {
-                    'line': {'color': "#ff6b35", 'width': 3},
-                    'thickness': 0.75,
-                    'value': re,
-                }
-            },
-            number={'font': {'color': '#00d4aa' if decision_pass else '#ff6b35', 'family': 'Rajdhani', 'size': 36}}
-        ))
-        fig_gauge.update_layout(
-            paper_bgcolor='#0d1f35', plot_bgcolor='#0d1f35',
-            font_color='#e0f0ff', height=320,
-            margin=dict(l=20, r=20, t=40, b=10)
-        )
-        st.plotly_chart(fig_gauge, use_container_width=True)
+    # Gauge chart - defect vs limit
+    with col1:
+        fig_gauge = go.Figure(go.Indicator(
+            mode="gauge+number+delta",
+            value=n_defects,
+            delta={'reference': ac, 'increasing': {'color': "#ff6b35"}, 'decreasing': {'color': "#00d4aa"}},
+            title={'text': "Jumlah Defek vs Accept Number", 'font': {'color': '#e0f0ff', 'family': 'Rajdhani', 'size': 15}},
+            gauge={
+                'axis': {'range': [0, max(re * 2, n_defects * 1.5, 5)], 'tickcolor': '#7899bb'},
+                'bar': {'color': '#00d4aa' if decision_pass else '#ff6b35'},
+                'bgcolor': '#0d1f35',
+                'borderwidth': 1,
+                'bordercolor': '#1a3a5c',
+                'steps': [
+                    {'range': [0, ac], 'color': 'rgba(0,212,170,0.15)'},
+                    {'range': [ac, re], 'color': 'rgba(255,165,0,0.15)'},
+                    {'range': [re, max(re * 2, n_defects * 1.5, 5)], 'color': 'rgba(255,107,53,0.15)'},
+                ],
+                'threshold': {
+                    'line': {'color': "#ff6b35", 'width': 3},
+                    'thickness': 0.75,
+                    'value': re,
+                }
+            },
+            number={'font': {'color': '#00d4aa' if decision_pass else '#ff6b35', 'family': 'Rajdhani', 'size': 36}}
+        ))
+        fig_gauge.update_layout(
+            paper_bgcolor='#0d1f35', plot_bgcolor='#0d1f35',
+            font_color='#e0f0ff', height=320,
+            margin=dict(l=20, r=20, t=40, b=10)
+        )
+        st.plotly_chart(fig_gauge, use_container_width=True)
 
-    # Pie chart - defect vs good
-    with col2:
-        good = sample_size - n_defects
-        fig_pie = go.Figure(go.Pie(
-            labels=['Baik', 'Defek'],
-            values=[max(good, 0), n_defects],
-            hole=0.55,
-            marker=dict(colors=['#00d4aa', '#ff6b35'], line=dict(color='#060d1a', width=2)),
-            textfont=dict(family='Rajdhani', size=14, color='#e0f0ff'),
-        ))
-        fig_pie.update_layout(
-            paper_bgcolor='#0d1f35', plot_bgcolor='#0d1f35',
-            font_color='#e0f0ff', height=320,
-            title=dict(text='Komposisi Sampel', font=dict(family='Rajdhani', color='#e0f0ff', size=15)),
-            margin=dict(l=20, r=20, t=40, b=10),
-            legend=dict(font=dict(color='#e0f0ff'))
-        )
-        st.plotly_chart(fig_pie, use_container_width=True)
+    # Pie chart - defect vs good
+    with col2:
+        good = sample_size - n_defects
+        fig_pie = go.Figure(go.Pie(
+            labels=['Baik', 'Defek'],
+            values=[max(good, 0), n_defects],
+            hole=0.55,
+            marker=dict(colors=['#00d4aa', '#ff6b35'], line=dict(color='#060d1a', width=2)),
+            textfont=dict(family='Rajdhani', size=14, color='#e0f0ff'),
+        ))
+        fig_pie.update_layout(
+            paper_bgcolor='#0d1f35', plot_bgcolor='#0d1f35',
+            font_color='#e0f0ff', height=320,
+            title=dict(text='Komposisi Sampel', font=dict(family='Rajdhani', color='#e0f0ff', size=15)),
+            margin=dict(l=20, r=20, t=40, b=10),
+            legend=dict(font=dict(color='#e0f0ff'))
+        )
+        st.plotly_chart(fig_pie, use_container_width=True)
 
-    # Bar chart - sensitivity analysis (vary defects)
-    st.markdown('<div class="section-title">Analisis Sensitivitas — Keputusan per Jumlah Defek</div>', unsafe_allow_html=True)
-    max_def = max(re * 3, 10)
-    defect_range = list(range(0, max_def + 1))
-    colors_bar = ['#00d4aa' if d <= ac else '#ff6b35' for d in defect_range]
-    fig_bar = go.Figure(go.Bar(
-        x=defect_range,
-        y=defect_range,
-        marker=dict(color=colors_bar),
-        text=['ACCEPT' if d <= ac else 'REJECT' for d in defect_range],
-        textposition='auto',
-        textfont=dict(family='Rajdhani', size=10, color='#060d1a'),
-    ))
-    fig_bar.add_vline(x=ac + 0.5, line_color='#ffd700', line_dash='dash', line_width=2,
-                      annotation_text=f'Batas Ac={ac}', annotation_font_color='#ffd700')
-    fig_bar.update_layout(
-        paper_bgcolor='#0d1f35', plot_bgcolor='#0a1628',
-        font_color='#e0f0ff', height=280,
-        xaxis=dict(title='Jumlah Defek', gridcolor='#1a3a5c', color='#7899bb'),
-        yaxis=dict(title='Jumlah Defek', gridcolor='#1a3a5c', color='#7899bb'),
-        margin=dict(l=20, r=20, t=20, b=20),
-        showlegend=False
-    )
-    st.plotly_chart(fig_bar, use_container_width=True)
+    # Bar chart - sensitivity analysis (vary defects)
+    st.markdown('<div class="section-title">Analisis Sensitivitas — Keputusan per Jumlah Defek</div>', unsafe_allow_html=True)
+    max_def = max(re * 3, 10)
+    defect_range = list(range(0, max_def + 1))
+    colors_bar = ['#00d4aa' if d <= ac else '#ff6b35' for d in defect_range]
+    fig_bar = go.Figure(go.Bar(
+        x=defect_range,
+        y=defect_range,
+        marker=dict(color=colors_bar),
+        text=['ACCEPT' if d <= ac else 'REJECT' for d in defect_range],
+        textposition='auto',
+        textfont=dict(family='Rajdhani', size=10, color='#060d1a'),
+    ))
+    fig_bar.add_vline(x=ac + 0.5, line_color='#ffd700', line_dash='dash', line_width=2,
+                      annotation_text=f'Batas Ac={ac}', annotation_font_color='#ffd700')
+    fig_bar.update_layout(
+        paper_bgcolor='#0d1f35', plot_bgcolor='#0a1628',
+        font_color='#e0f0ff', height=280,
+        xaxis=dict(title='Jumlah Defek', gridcolor='#1a3a5c', color='#7899bb'),
+        yaxis=dict(title='Jumlah Defek', gridcolor='#1a3a5c', color='#7899bb'),
+        margin=dict(l=20, r=20, t=20, b=20),
+        showlegend=False
+    )
+    st.plotly_chart(fig_bar, use_container_width=True)
 
-    # OC Curve (Operating Characteristic)
-    st.markdown('<div class="section-title">OC Curve — Kurva Karakteristik Operasi</div>', unsafe_allow_html=True)
-    p_values = np.linspace(0, 0.3, 200)
-    pa_values = []
-    for p in p_values:
-        # Binomial probability P(X <= Ac) where X ~ Binomial(n, p)
-        pa = sum(math.comb(sample_size, k) * (p**k) * ((1-p)**(sample_size-k))
-                 for k in range(ac + 1))
-        pa_values.append(pa * 100)
+    # OC Curve (Operating Characteristic)
+    st.markdown('<div class="section-title">OC Curve — Kurva Karakteristik Operasi</div>', unsafe_allow_html=True)
+    p_values = np.linspace(0, 0.3, 200)
+    pa_values = []
+    for p in p_values:
+        # Binomial probability P(X <= Ac) where X ~ Binomial(n, p)
+        pa = sum(math.comb(sample_size, k) * (p**k) * ((1-p)**(sample_size-k))
+                 for k in range(ac + 1))
+        pa_values.append(pa * 100)
 
-    fig_oc = go.Figure()
-    fig_oc.add_trace(go.Scatter(
-        x=p_values * 100, y=pa_values,
-        mode='lines', name='P(Accept)',
-        line=dict(color='#00d4aa', width=2.5),
-        fill='tozeroy', fillcolor='rgba(0,212,170,0.07)'
-    ))
-    fig_oc.add_vline(x=aql_level, line_color='#ffd700', line_dash='dot',
-                     annotation_text=f'AQL={aql_level}%', annotation_font_color='#ffd700')
-    fig_oc.add_hline(y=95, line_color='#7899bb', line_dash='dot',
-                     annotation_text='95% Accept', annotation_font_color='#7899bb')
-    fig_oc.update_layout(
-        paper_bgcolor='#0d1f35', plot_bgcolor='#0a1628',
-        font_color='#e0f0ff', height=300,
-        xaxis=dict(title='Defect Rate (%)', gridcolor='#1a3a5c', color='#7899bb'),
-        yaxis=dict(title='P(Accept) %', gridcolor='#1a3a5c', color='#7899bb', range=[0, 105]),
-        margin=dict(l=20, r=20, t=20, b=20),
-        legend=dict(font=dict(color='#e0f0ff'))
-    )
-    st.plotly_chart(fig_oc, use_container_width=True)
+    fig_oc = go.Figure()
+    fig_oc.add_trace(go.Scatter(
+        x=p_values * 100, y=pa_values,
+        mode='lines', name='P(Accept)',
+        line=dict(color='#00d4aa', width=2.5),
+        fill='tozeroy', fillcolor='rgba(0,212,170,0.07)'
+    ))
+    fig_oc.add_vline(x=aql_level, line_color='#ffd700', line_dash='dot',
+                     annotation_text=f'AQL={aql_level}%', annotation_font_color='#ffd700')
+    fig_oc.add_hline(y=95, line_color='#7899bb', line_dash='dot',
+                     annotation_text='95% Accept', annotation_font_color='#7899bb')
+    fig_oc.update_layout(
+        paper_bgcolor='#0d1f35', plot_bgcolor='#0a1628',
+        font_color='#e0f0ff', height=300,
+        xaxis=dict(title='Defect Rate (%)', gridcolor='#1a3a5c', color='#7899bb'),
+        yaxis=dict(title='P(Accept) %', gridcolor='#1a3a5c', color='#7899bb', range=[0, 105]),
+        margin=dict(l=20, r=20, t=20, b=20),
+        legend=dict(font=dict(color='#e0f0ff'))
+    )
+    st.plotly_chart(fig_oc, use_container_width=True)
 
 # ── TAB 3: TABEL AQL ─────────────────────────
 with tab3:
-    st.markdown('<div class="section-title">Tabel Referensi AQL (ISO 2859-1 — Normal Inspection)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Tabel Referensi AQL (ISO 2859-1 — Normal Inspection)</div>', unsafe_allow_html=True)
 
-    # Build summary table
-    rows = []
-    for low, high, code in LOT_SIZE_TABLE:
-        n = SAMPLE_SIZE[code]
-        row = {'Ukuran Lot': f"{low:,} – {high:,}" if high != float('inf') else f"≥ {low:,}",
-               'Kode': code, 'n Sampel': n}
-        for aql_v in [0.65, 1.0, 1.5, 2.5, 4.0, 6.5]:
-            crit = AQL_TABLE[code].get(aql_v, (0, 1))
-            row[f'AQL {aql_v}%'] = f"Ac={crit[0]} Re={crit[1]}"
-        rows.append(row)
+    # Build summary table
+    rows = []
+    for low, high, code in LOT_SIZE_TABLE:
+        n = SAMPLE_SIZE[code]
+        row = {'Ukuran Lot': f"{low:,} – {high:,}" if high != float('inf') else f"≥ {low:,}",
+               'Kode': code, 'n Sampel': n}
+        for aql_v in [0.65, 1.0, 1.5, 2.5, 4.0, 6.5]:
+            crit = AQL_TABLE[code].get(aql_v, (0, 1))
+            row[f'AQL {aql_v}%'] = f"Ac={crit[0]} Re={crit[1]}"
+        rows.append(row)
 
-    df_table = pd.DataFrame(rows)
-    # Highlight current row
-    def highlight_current(row):
-        if row['Kode'] == code_letter:
-            return ['background-color: rgba(0,212,170,0.15); color: #00d4aa'] * len(row)
-        return [''] * len(row)
+    df_table = pd.DataFrame(rows)
+    # Highlight current row
+    def highlight_current(row):
+        if row['Kode'] == code_letter:
+            return ['background-color: rgba(0,212,170,0.15); color: #00d4aa'] * len(row)
+        return [''] * len(row)
 
-    st.dataframe(
-        df_table.style.apply(highlight_current, axis=1),
-        use_container_width=True, height=400
-    )
-    st.caption(f"🟢 Baris yang di-highlight = kode **{code_letter}** sesuai lot size **{lot_size:,}**")
+    st.dataframe(
+        df_table.style.apply(highlight_current, axis=1),
+        use_container_width=True, height=400
+    )
+    st.caption(f"🟢 Baris yang di-highlight = kode **{code_letter}** sesuai lot size **{lot_size:,}**")
 
-    st.markdown('<div class="section-title">Tabel Ukuran Lot → Kode Sampel</div>', unsafe_allow_html=True)
-    st.markdown("""
+    st.markdown('<div class="section-title">Tabel Ukuran Lot → Kode Sampel</div>', unsafe_allow_html=True)
+    st.markdown("""
 | Ukuran Lot | Kode | n Sampel | Ukuran Lot | Kode | n Sampel |
 |---|---|---|---|---|---|
 | 2–8 | A | 2 | 501–1,200 | J | 80 |
@@ -514,19 +511,19 @@ with tab3:
 
 # ── TAB 4: LAPORAN ────────────────────────────
 with tab4:
-    st.markdown('<div class="section-title">Laporan Hasil Sampling</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Laporan Hasil Sampling</div>', unsafe_allow_html=True)
 
-    from datetime import datetime
-    from zoneinfo import ZoneInfo
-    from fpdf import FPDF
-    import io
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from fpdf import FPDF
+    import io
 
-    # Mengunci waktu ke WIB
-    waktu_jakarta = ZoneInfo("Asia/Jakarta")
-    now = datetime.now(waktu_jakarta).strftime("%d %B %Y, %H:%M WIB")
+    # Mengunci waktu ke WIB
+    waktu_jakarta = ZoneInfo("Asia/Jakarta")
+    now = datetime.now(waktu_jakarta).strftime("%d %B %Y, %H:%M WIB")
 
-    # 1. Teks Markdown untuk ditampilkan di layar Streamlit (Tetap menggunakan Emoji)
-    report_text_markdown = f"""
+    # 1. Teks Markdown untuk ditampilkan di layar Streamlit (Tetap menggunakan Emoji)
+    report_text_markdown = f"""
 ## 📄 LAPORAN HASIL SAMPLING AQL
 **Tanggal:** {now}
 
@@ -566,106 +563,106 @@ with tab4:
 ---
 *Laporan ini dibuat otomatis menggunakan AQL Sampling Analyzer — Kelompok 7 LPK 2026*
 *Standar Referensi: ISO 2859-1 (Sampling procedures for inspection by attributes)*
-    """
-    
-    # Tampilkan laporan dalam bentuk Markdown di Tab 4 Streamlit
-    st.markdown(report_text_markdown)
+    """
+    
+    # Tampilkan laporan dalam bentuk Markdown di Tab 4 Streamlit
+    st.markdown(report_text_markdown)
 
-    # 2. PROSES GENERATE REKAYASA PDF (Membersihkan emoji agar PDF tidak error/corrupt)
-    def buat_pdf():
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Helvetica", size=12)
-        
-        # Judul Laporan
-        pdf.set_font("Helvetica", style="B", size=16)
-        pdf.cell(200, 10, txt="LAPORAN HASIL SAMPLING AQL", ln=True, align='C')
-        pdf.set_font("Helvetica", size=10)
-        pdf.cell(200, 10, txt=f"Tanggal Cetak: {now}", ln=True, align='C')
-        pdf.ln(10)
-        
-        # Helper untuk buat baris tebal-tipis (key-value)
-        def tambah_baris(label, nilai):
-            pdf.set_font("Helvetica", style="B", size=11)
-            pdf.cell(60, 8, txt=f"{label}:", border=0)
-            pdf.set_font("Helvetica", size=11)
-            pdf.cell(130, 8, txt=str(nilai), border=0, ln=True)
+    # 2. PROSES GENERATE REKAYASA PDF (Membersihkan emoji agar PDF tidak error/corrupt)
+    def buat_pdf():
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Helvetica", size=12)
+        
+        # Judul Laporan
+        pdf.set_font("Helvetica", style="B", size=16)
+        pdf.cell(200, 10, txt="LAPORAN HASIL SAMPLING AQL", ln=True, align='C')
+        pdf.set_font("Helvetica", size=10)
+        pdf.cell(200, 10, txt=f"Tanggal Cetak: {now}", ln=True, align='C')
+        pdf.ln(10)
+        
+        # Helper untuk buat baris tebal-tipis (key-value)
+        def tambah_baris(label, nilai):
+            pdf.set_font("Helvetica", style="B", size=11)
+            pdf.cell(60, 8, txt=f"{label}:", border=0)
+            pdf.set_font("Helvetica", size=11)
+            pdf.cell(130, 8, txt=str(nilai), border=0, ln=True)
 
-        # Bagian Identifikasi
-        pdf.set_font("Helvetica", style="B", size=13)
-        pdf.cell(200, 8, txt="I. IDENTIFIKASI LOT", ln=True)
-        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-        pdf.ln(2)
-        tambah_baris("Nama Produk", product_name)
-        tambah_baris("Nomor Lot", lot_number)
-        tambah_baris("Inspektor", inspector)
-        tambah_baris("Tipe Inspeksi", inspection_type)
-        pdf.ln(5)
+        # Bagian Identifikasi
+        pdf.set_font("Helvetica", style="B", size=13)
+        pdf.cell(200, 8, txt="I. IDENTIFIKASI LOT", ln=True)
+        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+        pdf.ln(2)
+        tambah_baris("Nama Produk", product_name)
+        tambah_baris("Nomor Lot", lot_number)
+        tambah_baris("Inspektor", inspector)
+        tambah_baris("Tipe Inspeksi", inspection_type)
+        pdf.ln(5)
 
-        # Bagian Parameter
-        pdf.set_font("Helvetica", style="B", size=13)
-        pdf.cell(200, 8, txt="II. PARAMETER SAMPLING (ISO 2859-1)", ln=True)
-        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-        pdf.ln(2)
-        tambah_baris("Ukuran Lot", f"{lot_size:,} unit")
-        tambah_baris("Kode Sampel", code_letter)
-        tambah_baris("Ukuran Sampel (n)", f"{sample_size} unit")
-        tambah_baris("AQL Level", f"{aql_level}%")
-        tambah_baris("Accept Number (Ac)", ac)
-        tambah_baris("Reject Number (Re)", re)
-        pdf.ln(5)
+        # Bagian Parameter
+        pdf.set_font("Helvetica", style="B", size=13)
+        pdf.cell(200, 8, txt="II. PARAMETER SAMPLING (ISO 2859-1)", ln=True)
+        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+        pdf.ln(2)
+        tambah_baris("Ukuran Lot", f"{lot_size:,} unit")
+        tambah_baris("Kode Sampel", code_letter)
+        tambah_baris("Ukuran Sampel (n)", f"{sample_size} unit")
+        tambah_baris("AQL Level", f"{aql_level}%")
+        tambah_baris("Accept Number (Ac)", ac)
+        tambah_baris("Reject Number (Re)", re)
+        pdf.ln(5)
 
-        # Bagian Hasil
-        pdf.set_font("Helvetica", style="B", size=13)
-        pdf.cell(200, 8, txt="III. HASIL PEMERIKSAAN & KEPUTUSAN", ln=True)
-        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-        pdf.ln(2)
-        tambah_baris("Jumlah Defek Ditemukan", f"{n_defects} unit")
-        tambah_baris("Defect Rate", f"{defect_rate:.3f}%")
-        
-        # Status Keputusan Berwarna / Bold teks biasa (Tanpa emoji)
-        status_keputusan = "ACCEPT" if decision_pass else "REJECT"
-        tambah_baris("Keputusan Akhir", status_keputusan)
-        pdf.ln(4)
+        # Bagian Hasil
+        pdf.set_font("Helvetica", style="B", size=13)
+        pdf.cell(200, 8, txt="III. HASIL PEMERIKSAAN & KEPUTUSAN", ln=True)
+        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+        pdf.ln(2)
+        tambah_baris("Jumlah Defek Ditemukan", f"{n_defects} unit")
+        tambah_baris("Defect Rate", f"{defect_rate:.3f}%")
+        
+        # Status Keputusan Berwarna / Bold teks biasa (Tanpa emoji)
+        status_keputusan = "ACCEPT" if decision_pass else "REJECT"
+        tambah_baris("Keputusan Akhir", status_keputusan)
+        pdf.ln(4)
 
-        # Dasar Keputusan & Rekomendasi (Menggunakan multi_cell agar teks panjang otomatis turun ke bawah)
-        pdf.set_font("Helvetica", style="B", size=11)
-        pdf.cell(200, 6, txt="Dasar Keputusan:", ln=True)
-        pdf.set_font("Helvetica", size=11)
-        txt_dasar = f"Lot DITERIMA karena jumlah defek ditemukan ({n_defects}) tidak melebihi Accept Number ({ac}) sesuai standar AQL {aql_level}%." if decision_pass else f"Lot DITOLAK karena jumlah defek ditemukan ({n_defects}) mencapai atau melebihi Reject Number ({re}) sesuai standar AQL {aql_level}%."
-        pdf.multi_cell(190, 6, txt=txt_dasar)
-        pdf.ln(4)
+        # Dasar Keputusan & Rekomendasi (Menggunakan multi_cell agar teks panjang otomatis turun ke bawah)
+        pdf.set_font("Helvetica", style="B", size=11)
+        pdf.cell(200, 6, txt="Dasar Keputusan:", ln=True)
+        pdf.set_font("Helvetica", size=11)
+        txt_dasar = f"Lot DITERIMA karena jumlah defek ditemukan ({n_defects}) tidak melebihi Accept Number ({ac}) sesuai standar AQL {aql_level}%." if decision_pass else f"Lot DITOLAK karena jumlah defek ditemukan ({n_defects}) mencapai atau melebihi Reject Number ({re}) sesuai standar AQL {aql_level}%."
+        pdf.multi_cell(190, 6, txt=txt_dasar)
+        pdf.ln(4)
 
-        pdf.set_font("Helvetica", style="B", size=11)
-        pdf.cell(200, 6, txt="Rekomendasi Tindakan:", ln=True)
-        pdf.set_font("Helvetica", size=11)
-        txt_rekomendasi = "Lot dapat diterima dan diteruskan ke proses selanjutnya. Pertahankan standar produksi saat ini." if decision_pass else "Lot ditolak. Lakukan salah satu:\n1. Inspeksi 100% seluruh lot\n2. Kembalikan ke supplier\n3. Lakukan analisis akar masalah (root cause analysis)\n4. Review dan perbaiki proses produksi"
-        pdf.multi_cell(190, 6, txt=txt_rekomendasi)
-        
-        pdf.ln(15)
-        pdf.set_font("Helvetica", style="I", size=9)
-        pdf.cell(200, 5, txt="Laporan ini dibuat otomatis menggunakan AQL Sampling Analyzer - Kelompok 7 LPK 2026", ln=True, align='C')
-        pdf.cell(200, 5, txt="Standar Referensi: ISO 2859-1", ln=True, align='C')
-        
-        # Mengembalikan data sebagai bytes buffer agar bisa langsung didownload Streamlit
-        return pdf.output()
+        pdf.set_font("Helvetica", style="B", size=11)
+        pdf.cell(200, 6, txt="Rekomendasi Tindakan:", ln=True)
+        pdf.set_font("Helvetica", size=11)
+        txt_rekomendasi = "Lot dapat diterima dan diteruskan ke proses selanjutnya. Pertahankan standar produksi saat ini." if decision_pass else "Lot ditolak. Lakukan salah satu:\n1. Inspeksi 100% seluruh lot\n2. Kembalikan ke supplier\n3. Lakukan analisis akar masalah (root cause analysis)\n4. Review dan perbaiki proses produksi"
+        pdf.multi_cell(190, 6, txt=txt_rekomendasi)
+        
+        pdf.ln(15)
+        pdf.set_font("Helvetica", style="I", size=9)
+        pdf.cell(200, 5, txt="Laporan ini dibuat otomatis menggunakan AQL Sampling Analyzer - Kelompok 7 LPK 2026", ln=True, align='C')
+        pdf.cell(200, 5, txt="Standar Referensi: ISO 2859-1", ln=True, align='C')
+        
+        # Mengembalikan data sebagai bytes buffer agar bisa langsung didownload Streamlit
+        return pdf.output()
 
-    # Generate file PDF ke dalam memori buffer RAM
-    pdf_data = buat_pdf()
+    # Generate file PDF ke dalam memori buffer RAM
+    pdf_data = buat_pdf()
 
-    # 3. BUTTON DOWNLOAD (Ubah dari .txt menjadi .pdf)
-    st.download_button(
-        label="📥 Unduh Laporan Resmi (.pdf)",
-        data=bytes(pdf_data),
-        file_name=f"laporan_aql_{lot_number.replace('-','_')}.pdf",
-        mime="application/pdf",
-        use_container_width=True
-    )
+    # 3. BUTTON DOWNLOAD (Ubah dari .txt menjadi .pdf)
+    st.download_button(
+        label="📥 Unduh Laporan Resmi (.pdf)",
+        data=bytes(pdf_data),
+        file_name=f"laporan_aql_{lot_number.replace('-','_')}.pdf",
+        mime="application/pdf",
+        use_container_width=True
+    )
 
-    st.markdown("---")
-    st.markdown("""
+    st.markdown("---")
+    st.markdown("""
 <div style="text-align:center; color:var(--muted); font-family:Rajdhani; letter-spacing:1px; font-size:0.85rem; margin-top:10px;">
-    AQL SAMPLING ANALYZER · KELOMPOK 7 · LPK 2026<br>
-    Standar: ISO 2859-1 · General Inspection Level II · Single Sampling Normal
+    AQL SAMPLING ANALYZER · KELOMPOK 7 · LPK 2026<br>
+    Standar: ISO 2859-1 · General Inspection Level II · Single Sampling Normal
 </div>
 """, unsafe_allow_html=True)
